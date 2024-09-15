@@ -18,12 +18,12 @@ public class ComprobanteController {
 
     @PostMapping
     public ResponseEntity<Comprobante> crearComprobante(
-            @RequestParam Long usuarioId,
+            @RequestParam String dni,
             @RequestParam List<Long> productoIds,
             @RequestParam Integer cantidad,
             @RequestParam TipoComprobante tipoComprobante
     ) {
-        Comprobante comprobante = comprobanteService.crearComprobante(usuarioId, productoIds, cantidad, tipoComprobante);
+        Comprobante comprobante = comprobanteService.crearComprobante(dni, productoIds, cantidad, tipoComprobante);
         return new ResponseEntity<>(comprobante, HttpStatus.CREATED);
     }
 

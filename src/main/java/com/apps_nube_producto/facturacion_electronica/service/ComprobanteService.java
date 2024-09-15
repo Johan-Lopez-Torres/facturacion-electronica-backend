@@ -21,12 +21,17 @@ public class ComprobanteService {
     private final ProductoRepository productoRepository;
     private final UsuarioRepository usuarioRepository;
 
-    public Comprobante crearComprobante(Long usuarioId,
+    public Comprobante crearComprobante(String dni,
                                         List<Long> productoIds,
                                         Integer cantidad,
                                         TipoComprobante tipoComprobante) {
 
-        Usuario usuario = usuarioRepository.findById(usuarioId)
+        if (usuarioRepository.findByTipoDocumento_Valor(dni) == null) {
+            throw new RuntimeException("Usuario no encontrado");
+        }
+
+
+        Usuario usuario = usuarioRepository.findByTipoDocumento_Valor(dni)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         List<ComprobanteProducto> comprobanteProductos = productoIds.stream().map(id -> {

@@ -14,7 +14,6 @@ import java.util.List;
 @Builder
 public class Usuario extends BaseEntity {
 
-
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
     private TipoDocumento tipoDocumento;
 
