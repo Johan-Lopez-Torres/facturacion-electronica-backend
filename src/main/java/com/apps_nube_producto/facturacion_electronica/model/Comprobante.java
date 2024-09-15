@@ -1,6 +1,7 @@
 package com.apps_nube_producto.facturacion_electronica.model;
 
 
+import com.apps_nube_producto.facturacion_electronica.model.enums.TipoComprobante;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
@@ -16,10 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Comprobante {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Comprobante extends BaseEntity {
 
     @CreationTimestamp
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss a")
@@ -38,4 +36,5 @@ public class Comprobante {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "comprobante")
     private List<ComprobanteProducto> comprobanteProductos;
+
 }
