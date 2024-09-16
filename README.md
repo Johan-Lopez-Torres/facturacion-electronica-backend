@@ -3,7 +3,7 @@
 ![Texto alternativo](https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Spring_Framework_Logo_2018.svg/1200px-Spring_Framework_Logo_2018.svg.png)
 
 
-###  1. Usar comando  <git clone https://github.com/Johan-Lopez-Torres/facturacion-electronica-backend>.
+###  1. Usar comando  <git clone https://github.com/Johan-Lopez-Torres/facturacion-electronica-backend >.
 
 ### 2. Ubicarte en la carpeta del repositorio.
 
