@@ -1,4 +1,4 @@
-package com.apps_nube_producto.facturacion_electronica.model.dto;
+package com.apps_nube_producto.facturacion_electronica.dto;
 
 
 import lombok.Getter;

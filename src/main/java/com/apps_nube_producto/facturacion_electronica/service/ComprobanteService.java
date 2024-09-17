@@ -20,6 +20,7 @@ public class ComprobanteService {
     private final ComprobanteRepository comprobanteRepository;
     private final ProductoRepository productoRepository;
     private final UsuarioRepository usuarioRepository;
+    private final static BigDecimal IGV = new BigDecimal("0.18");
 
     public Comprobante crearComprobante(String dni,
                                         List<Long> productoIds,
@@ -29,7 +30,6 @@ public class ComprobanteService {
         if (usuarioRepository.findByTipoDocumento_Valor(dni) == null) {
             throw new RuntimeException("Usuario no encontrado");
         }
-
 
         Usuario usuario = usuarioRepository.findByTipoDocumento_Valor(dni)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
@@ -48,7 +48,7 @@ public class ComprobanteService {
                 .map(cp -> cp.getProducto().getPrecio().multiply(BigDecimal.valueOf(cp.getCantidad())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        BigDecimal igv = subtotal.multiply(new BigDecimal("0.18"));
+        BigDecimal igv = subtotal.multiply(IGV);
         BigDecimal total = subtotal.add(igv);
 
 

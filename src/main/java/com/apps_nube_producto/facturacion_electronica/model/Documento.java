@@ -1,10 +1,9 @@
 package com.apps_nube_producto.facturacion_electronica.model;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
+import com.apps_nube_producto.facturacion_electronica.model.enums.TipoDocumento;
+import jakarta.persistence.*;
 import lombok.*;
+
 
 import java.util.List;
 
@@ -14,9 +13,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TipoDocumento extends BaseEntity {
+public class Documento extends BaseEntity {
 
-    private String tipo;
+    @Enumerated(EnumType.STRING)
+    private TipoDocumento tipo;
     private String valor;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "tipoDocumento")
