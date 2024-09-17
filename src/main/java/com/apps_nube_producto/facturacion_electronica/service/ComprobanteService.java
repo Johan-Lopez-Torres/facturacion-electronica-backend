@@ -20,6 +20,7 @@ public class ComprobanteService {
     private final ComprobanteRepository comprobanteRepository;
     private final ProductoRepository productoRepository;
     private final UsuarioRepository usuarioRepository;
+
     private final static BigDecimal IGV = new BigDecimal("0.18");
 
 
@@ -29,7 +30,7 @@ public class ComprobanteService {
                                         TipoComprobante tipoComprobante) {
 
         if (usuarioRepository.findByTipoDocumento_Valor(dni) == null) {
-            throw new RuntimeException("Usuario no encontrado");
+
         }
 //        if(tipoComprobante.equals(TipoComprobante.FACTURA)){
 //            if(usuarioRepository.findByTipoDocumento_Valor(dni).get().getTipoDocumento().getDescripcion().equals("DNI")){

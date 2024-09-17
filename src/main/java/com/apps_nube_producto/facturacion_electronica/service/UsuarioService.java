@@ -26,7 +26,7 @@ public class UsuarioService {
     private String API_URL_RUC;
 
     @Value("${api.bearer.token}")
-    private  String BEARER_TOKEN;
+    private String BEARER_TOKEN;
 
     public Usuario crearUsuarioSiDniValido(String dni) {
         String apiUrl = API_URL_DNI + dni;
@@ -66,6 +66,8 @@ public class UsuarioService {
 
             if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
                 Usuario usuario = new Usuario();
+
+                usuario.setTipoDocumento(new Documento());
                 usuario.getTipoDocumento().setTipo(TipoDocumento.RUC);
                 usuario.getTipoDocumento().setValor(ruc);
 
@@ -76,6 +78,10 @@ public class UsuarioService {
         } catch (RestClientResponseException ex) {
             throw new RuntimeException("Error al validar el RUC en la API externa: " + ex.getMessage());
         }
+    }
+
+    private boolean verificarDniORuc(String dniORuc) {
+        return dniORuc.matches("^\\d{8}|\\d{11}$");
     }
 
 }
