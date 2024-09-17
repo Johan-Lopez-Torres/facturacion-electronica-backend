@@ -22,6 +22,7 @@ public class ComprobanteService {
     private final UsuarioRepository usuarioRepository;
     private final static BigDecimal IGV = new BigDecimal("0.18");
 
+
     public Comprobante crearComprobante(String dni,
                                         List<Long> productoIds,
                                         Integer cantidad,
@@ -30,6 +31,12 @@ public class ComprobanteService {
         if (usuarioRepository.findByTipoDocumento_Valor(dni) == null) {
             throw new RuntimeException("Usuario no encontrado");
         }
+//        if(tipoComprobante.equals(TipoComprobante.FACTURA)){
+//            if(usuarioRepository.findByTipoDocumento_Valor(dni).get().getTipoDocumento().getDescripcion().equals("DNI")){
+//                throw new RuntimeException("No se puede emitir factura con DNI");
+//            }
+//        }
+
 
         Usuario usuario = usuarioRepository.findByTipoDocumento_Valor(dni)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
@@ -44,19 +51,14 @@ public class ComprobanteService {
                     .build();
         }).collect(Collectors.toList());
 
-        BigDecimal subtotal = comprobanteProductos.stream()
-                .map(cp -> cp.getProducto().getPrecio().multiply(BigDecimal.valueOf(cp.getCantidad())))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        BigDecimal igv = subtotal.multiply(IGV);
-        BigDecimal total = subtotal.add(igv);
+        BigDecimal total = calcularSubtotal(comprobanteProductos);
 
 
         Comprobante comprobante = Comprobante.builder()
                 .usuario(usuario)
                 .comprobanteProductos(comprobanteProductos)
                 .total(total)
-                .igv(igv)
+                .igv(IGV)
                 .tipoComprobante(tipoComprobante)
                 .build();
 
@@ -65,6 +67,16 @@ public class ComprobanteService {
 
     public List<Comprobante> obtenerComprobantesPorUsuario(Long usuarioId) {
         return comprobanteRepository.findByUsuarioId(usuarioId);
+    }
+
+
+    public BigDecimal calcularSubtotal(List<ComprobanteProducto> comprobanteProductos) {
+        BigDecimal subtotal = comprobanteProductos.stream()
+                .map(cp -> cp.getProducto().getPrecio().multiply(BigDecimal.valueOf(cp.getCantidad())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal igv = subtotal.multiply(IGV);
+        subtotal.add(igv);
+        return subtotal;
     }
 
 }

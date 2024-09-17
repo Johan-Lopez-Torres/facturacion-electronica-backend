@@ -6,6 +6,7 @@ import com.apps_nube_producto.facturacion_electronica.model.Usuario;
 import com.apps_nube_producto.facturacion_electronica.dto.DniResponse;
 import com.apps_nube_producto.facturacion_electronica.model.enums.TipoDocumento;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientResponseException;
@@ -17,11 +18,15 @@ public class UsuarioService {
 
     private final RestTemplate restTemplate;
     private final UsuarioRepository usuarioRepository;
-    private final static String API_URL_DNI = "https://dniruc.apisperu.com/api/v1/dni/";
-    private final static String API_URL_RUC = "https://dniruc.apisperu.com/api/v1/ruc/";
 
+    @Value("${api.url.dni}")
+    private String API_URL_DNI;
 
-    private final String BEARER_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImpvaGFubG9wZXpzcmVAZ21haWwuY29tIn0.q5v6g2drntuPO-ZGF30CSrsWZzZvt8TyC7AoBRgbDpE"; // Reemplaza esto con tu token
+    @Value("${api.url.ruc}")
+    private String API_URL_RUC;
+
+    @Value("${api.bearer.token}")
+    private  String BEARER_TOKEN;
 
     public Usuario crearUsuarioSiDniValido(String dni) {
         String apiUrl = API_URL_DNI + dni;
