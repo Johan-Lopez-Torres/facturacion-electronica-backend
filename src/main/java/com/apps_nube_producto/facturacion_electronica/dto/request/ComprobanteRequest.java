@@ -25,7 +25,7 @@ public class ComprobanteRequest {
     @Min(value = 1, message = AppConstants.CANTIDAD_MINIMA)
     private Integer cantidad;
 
-    @Pattern(regexp = "^\\d{8}|\\d{11}$", message = AppConstants.DNI_RUC)
+    @Pattern(regexp = "^\\d{8}|\\d{11}$",  message = AppConstants.DOCUMENTO_INVALIDO)
     private String dniORuc;
 
     List<Long> productoIds;

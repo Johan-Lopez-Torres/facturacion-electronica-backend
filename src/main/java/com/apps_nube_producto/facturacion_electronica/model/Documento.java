@@ -22,10 +22,11 @@ public class Documento extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private TipoDocumento tipo;
 
+
     private String valor;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "tipoDocumento")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "tipoDocumento")
     private List<Usuario> usuarios;
 
     public Documento(TipoDocumento tipo, String valor) {

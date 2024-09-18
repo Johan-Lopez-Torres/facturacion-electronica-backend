@@ -10,6 +10,7 @@ import lombok.Setter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DniResponse {
     private Long id;
+    private String success;
     private String dni;
     private String nombre;
     private String apellidoPaterno;

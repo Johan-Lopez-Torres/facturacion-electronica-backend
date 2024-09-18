@@ -18,6 +18,6 @@ public class Producto extends BaseEntity {
     private String name;
     private BigDecimal precio;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "producto")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "producto")
     private List<ComprobanteProducto> comprobanteProductos;
 }

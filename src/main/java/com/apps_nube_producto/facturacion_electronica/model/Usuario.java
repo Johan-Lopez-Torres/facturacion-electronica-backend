@@ -15,10 +15,11 @@ import java.util.List;
 @Builder
 public class Usuario extends BaseEntity {
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "documento_id")
     private Documento tipoDocumento;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "usuario")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "usuario")
     private List<Comprobante> comprobantes;
 }

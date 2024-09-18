@@ -2,13 +2,12 @@ package com.apps_nube_producto.facturacion_electronica.service;
 
 import com.apps_nube_producto.facturacion_electronica.Repository.DocumentoRepository;
 import com.apps_nube_producto.facturacion_electronica.Repository.UsuarioRepository;
+import com.apps_nube_producto.facturacion_electronica.dto.DniResponse;
 import com.apps_nube_producto.facturacion_electronica.exception.DocumentoInvalido;
 import com.apps_nube_producto.facturacion_electronica.model.Documento;
 import com.apps_nube_producto.facturacion_electronica.model.Usuario;
-import com.apps_nube_producto.facturacion_electronica.dto.DniResponse;
 import com.apps_nube_producto.facturacion_electronica.model.enums.TipoDocumento;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -36,7 +35,6 @@ public class UsuarioService {
     public Usuario crearUsuarioSiDocumentoValido(String numDoc) {
         String apiUrl = obtenerApiUrl(numDoc);
 
-
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + BEARER_TOKEN);
         HttpEntity<String> entity = new HttpEntity<>(headers);
@@ -44,7 +42,7 @@ public class UsuarioService {
         try {
             ResponseEntity<DniResponse> response = restTemplate.exchange(apiUrl, HttpMethod.GET, entity, DniResponse.class);
 
-            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null && response.getBody().getSuccess().equals("true"))    {
                 Usuario usuario = crearUsuarioConDocumento(numDoc);
                 return usuario;
             } else {
@@ -53,8 +51,6 @@ public class UsuarioService {
         } catch (RestClientResponseException ex) {
             throw new RuntimeException("Error al validar la API externa: " + ex.getMessage());
         }
-
-
     }
 
 
@@ -67,30 +63,30 @@ public class UsuarioService {
             apiUrl = apiUrlDni;
         } else if (numDoc.length() == 11) {
             apiUrl = apiUrlRuc;
-        } else {
-            throw new IllegalArgumentException("DNI o RUC no válido.");
         }
         return apiUrl;
     }
 
     private Usuario crearUsuarioConDocumento(String numDoc) {
-        if (!obtenerOCrearUsuario(numDoc)) {
-            TipoDocumento tipo = numDoc.length() == 8 ? TipoDocumento.DNI : TipoDocumento.RUC;
+        Usuario usuario = usuarioRepository.findByTipoDocumento_Valor(numDoc);
 
-            Usuario usuario = Usuario.builder()
-                    .tipoDocumento(new Documento(tipo, numDoc))
+        if (usuario == null) {
+            TipoDocumento tipo = numDoc.length() == 8 ? TipoDocumento.DNI : TipoDocumento.RUC;
+            Documento documento = documentoRepository.findByValor(numDoc)
+                    .orElse(new Documento(tipo, numDoc));
+
+            usuario = Usuario.builder()
+                    .tipoDocumento(documento)
                     .build();
 
+            documentoRepository.save(documento);
             return usuarioRepository.save(usuario);
         } else {
-            return usuarioRepository.findByTipoDocumento_Valor(numDoc)
-                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado con documento: " + numDoc));
+            return usuario;
         }
     }
 
-    private boolean obtenerOCrearUsuario(String dniORuc) {
-        return documentoRepository.existsDocumentoByValor(dniORuc);
-    }
+
 
 
 }

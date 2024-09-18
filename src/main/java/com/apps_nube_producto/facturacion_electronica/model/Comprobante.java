@@ -3,7 +3,9 @@ package com.apps_nube_producto.facturacion_electronica.model;
 
 import com.apps_nube_producto.facturacion_electronica.model.enums.TipoComprobante;
 import com.apps_nube_producto.facturacion_electronica.model.relations.ComprobanteProducto;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -31,11 +33,12 @@ public class Comprobante extends BaseEntity {
 
     private Integer cantidad;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "comprobante")
+    @JsonBackReference
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "comprobante")
     private List<ComprobanteProducto> comprobanteProductos;
 
     @CreationTimestamp
