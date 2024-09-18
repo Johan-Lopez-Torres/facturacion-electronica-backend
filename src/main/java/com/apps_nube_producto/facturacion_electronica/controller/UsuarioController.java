@@ -15,9 +15,9 @@ public class UsuarioController {
 
     private final UsuarioService usuarioService;
 
-    @PostMapping("/crear/{dni}")
-    public ResponseEntity<?> crearUsuarioSiDniValido(@PathVariable String dni) {
-        return ResponseEntity.ok(usuarioService.crearUsuarioSiDniValido(dni));
+    @PostMapping("/crear/{numDoc}")
+    public ResponseEntity<?> crearUsuarioSiDniValido(@PathVariable String numDoc) {
+        return ResponseEntity.ok(usuarioService.crearUsuarioSiDocumentoValido(numDoc));
     }
 
 

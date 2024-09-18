@@ -1,5 +1,8 @@
-package com.apps_nube_producto.facturacion_electronica.model;
+package com.apps_nube_producto.facturacion_electronica.model.relations;
 
+import com.apps_nube_producto.facturacion_electronica.model.BaseEntity;
+import com.apps_nube_producto.facturacion_electronica.model.Comprobante;
+import com.apps_nube_producto.facturacion_electronica.model.Producto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,7 +12,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ComprobanteProducto extends BaseEntity{
+public class ComprobanteProducto extends BaseEntity {
 
 
     private Integer cantidad;

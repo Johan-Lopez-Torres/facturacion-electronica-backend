@@ -24,5 +24,11 @@ public class GlobalHandlerException {
         return ex.getMessage();
     }
 
+    @ExceptionHandler(DocumentoInvalido.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleDocumentoInvalido(DocumentoInvalido ex) {
+        return ex.getMessage();
+    }
+
 
 }

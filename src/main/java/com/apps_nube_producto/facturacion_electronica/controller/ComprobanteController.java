@@ -1,5 +1,6 @@
 package com.apps_nube_producto.facturacion_electronica.controller;
 
+import com.apps_nube_producto.facturacion_electronica.dto.request.ComprobanteRequest;
 import com.apps_nube_producto.facturacion_electronica.model.Comprobante;
 import com.apps_nube_producto.facturacion_electronica.model.enums.TipoComprobante;
 import com.apps_nube_producto.facturacion_electronica.service.ComprobanteService;
@@ -16,16 +17,14 @@ import java.util.List;
 public class ComprobanteController {
     private final ComprobanteService comprobanteService;
 
-    @PostMapping
+    @PostMapping("/crear")
     public ResponseEntity<Comprobante> crearComprobante(
-            @RequestParam String dni,
-            @RequestParam List<Long> productoIds,
-            @RequestParam Integer cantidad,
-            @RequestParam TipoComprobante tipoComprobante
-    ) {
-        Comprobante comprobante = comprobanteService.crearComprobante(dni, productoIds, cantidad, tipoComprobante);
+            @RequestBody ComprobanteRequest comprobanteRequest) {
+        Comprobante comprobante = comprobanteService.crearComprobante(comprobanteRequest);
         return new ResponseEntity<>(comprobante, HttpStatus.CREATED);
     }
+
+
 
     @GetMapping("/usuario/{usuarioId}")
     public ResponseEntity<List<Comprobante>> obtenerComprobantesPorUsuario(@PathVariable Long usuarioId) {

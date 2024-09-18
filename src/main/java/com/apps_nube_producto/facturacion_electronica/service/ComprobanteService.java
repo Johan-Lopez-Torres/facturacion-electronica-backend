@@ -2,10 +2,15 @@ package com.apps_nube_producto.facturacion_electronica.service;
 
 
 import com.apps_nube_producto.facturacion_electronica.Repository.ComprobanteRepository;
+import com.apps_nube_producto.facturacion_electronica.Repository.DocumentoRepository;
 import com.apps_nube_producto.facturacion_electronica.Repository.ProductoRepository;
 import com.apps_nube_producto.facturacion_electronica.Repository.UsuarioRepository;
-import com.apps_nube_producto.facturacion_electronica.model.*;
+import com.apps_nube_producto.facturacion_electronica.dto.request.ComprobanteRequest;
+import com.apps_nube_producto.facturacion_electronica.model.Comprobante;
+import com.apps_nube_producto.facturacion_electronica.model.Producto;
+import com.apps_nube_producto.facturacion_electronica.model.Usuario;
 import com.apps_nube_producto.facturacion_electronica.model.enums.TipoComprobante;
+import com.apps_nube_producto.facturacion_electronica.model.relations.ComprobanteProducto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,28 +24,21 @@ public class ComprobanteService {
 
     private final ComprobanteRepository comprobanteRepository;
     private final ProductoRepository productoRepository;
-    private final UsuarioRepository usuarioRepository;
+    private final DocumentoRepository documentoRepository;
 
+    private final UsuarioService usuarioService;
     private final static BigDecimal IGV = new BigDecimal("0.18");
 
 
-    public Comprobante crearComprobante(String dni,
-                                        List<Long> productoIds,
-                                        Integer cantidad,
-                                        TipoComprobante tipoComprobante) {
+    public Comprobante crearComprobante(ComprobanteRequest comprobanteRequest) {
 
-        if (usuarioRepository.findByTipoDocumento_Valor(dni) == null) {
-
-        }
-//        if(tipoComprobante.equals(TipoComprobante.FACTURA)){
-//            if(usuarioRepository.findByTipoDocumento_Valor(dni).get().getTipoDocumento().getDescripcion().equals("DNI")){
-//                throw new RuntimeException("No se puede emitir factura con DNI");
-//            }
-//        }
+        String dniORuc = comprobanteRequest.getDniORuc();
+        Integer cantidad = comprobanteRequest.getCantidad();
+        List<Long> productoIds = comprobanteRequest.getProductoIds();
+        TipoComprobante tipoComprobante = comprobanteRequest.getTipoComprobante();
 
 
-        Usuario usuario = usuarioRepository.findByTipoDocumento_Valor(dni)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        Usuario usuario = usuarioService.crearUsuarioSiDocumentoValido(dniORuc);
 
         List<ComprobanteProducto> comprobanteProductos = productoIds.stream().map(id -> {
             Producto producto = productoRepository.findById(id)
@@ -52,8 +50,9 @@ public class ComprobanteService {
                     .build();
         }).collect(Collectors.toList());
 
-        BigDecimal total = calcularSubtotal(comprobanteProductos);
 
+        BigDecimal subtotal = calcularSubtotal(comprobanteProductos);
+        BigDecimal total = calcularTotal(subtotal);
 
         Comprobante comprobante = Comprobante.builder()
                 .usuario(usuario)
@@ -75,9 +74,12 @@ public class ComprobanteService {
         BigDecimal subtotal = comprobanteProductos.stream()
                 .map(cp -> cp.getProducto().getPrecio().multiply(BigDecimal.valueOf(cp.getCantidad())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal igv = subtotal.multiply(IGV);
-        subtotal.add(igv);
         return subtotal;
     }
+
+    private BigDecimal calcularTotal(BigDecimal subtotal) {
+        return subtotal.add(subtotal.multiply(IGV));
+    }
+
 
 }

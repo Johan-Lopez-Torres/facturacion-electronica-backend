@@ -1,4 +1,5 @@
 package com.apps_nube_producto.facturacion_electronica.model;
+import com.apps_nube_producto.facturacion_electronica.model.relations.ComprobanteProducto;
 import jakarta.persistence.*;
 import lombok.*;
 

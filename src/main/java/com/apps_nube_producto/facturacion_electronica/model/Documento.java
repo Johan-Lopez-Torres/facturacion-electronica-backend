@@ -14,6 +14,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"tipo", "valor"})
+})
 public class Documento extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
@@ -24,5 +27,10 @@ public class Documento extends BaseEntity {
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "tipoDocumento")
     private List<Usuario> usuarios;
+
+    public Documento(TipoDocumento tipo, String valor) {
+        this.tipo = tipo;
+        this.valor = valor;
+    }
 
 }

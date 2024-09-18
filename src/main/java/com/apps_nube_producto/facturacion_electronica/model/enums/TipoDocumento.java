@@ -1,5 +1,5 @@
 package com.apps_nube_producto.facturacion_electronica.model.enums;
 
 public enum TipoDocumento {
-    RUC, DNI, PASAPORTE, CARNET_EXTRANJERIA
+    RUC, DNI
 }
