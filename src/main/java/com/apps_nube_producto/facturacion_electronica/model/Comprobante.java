@@ -23,7 +23,6 @@ import java.util.List;
 public class Comprobante extends BaseEntity {
 
 
-
     @Enumerated(EnumType.STRING)
     private TipoComprobante tipoComprobante;
 
@@ -37,7 +36,7 @@ public class Comprobante extends BaseEntity {
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
-    @JsonBackReference
+
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "comprobante")
     private List<ComprobanteProducto> comprobanteProductos;
 

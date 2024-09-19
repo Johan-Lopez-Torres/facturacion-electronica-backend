@@ -49,13 +49,13 @@ public class ComprobanteService {
                     .build();
         }).collect(Collectors.toList());
 
-        // Actualizar el comprobante con los productos
+
         comprobante.setComprobanteProductos(comprobanteProductos);
 
         BigDecimal subtotal = calcularSubtotal(comprobanteProductos);
         BigDecimal total = calcularTotal(subtotal);
 
-        comprobante.setTotal(total); // Asignar el total calculado
+        comprobante.setTotal(total);
 
         // Guardar el comprobante con los productos relacionados
         return comprobanteRepository.save(comprobante);

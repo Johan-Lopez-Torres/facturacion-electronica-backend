@@ -3,6 +3,9 @@ package com.apps_nube_producto.facturacion_electronica.model.relations;
 import com.apps_nube_producto.facturacion_electronica.model.BaseEntity;
 import com.apps_nube_producto.facturacion_electronica.model.Comprobante;
 import com.apps_nube_producto.facturacion_electronica.model.Producto;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,11 +20,15 @@ public class ComprobanteProducto extends BaseEntity {
 
     private Integer cantidad;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
+
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name = "comprobante_id")
     private Comprobante comprobante;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
+
+    @JsonIncludeProperties({"name"})
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name = "producto_id")
     private Producto producto;
 
