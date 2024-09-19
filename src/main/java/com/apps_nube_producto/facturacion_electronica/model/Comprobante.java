@@ -30,7 +30,6 @@ public class Comprobante extends BaseEntity {
     private BigDecimal total;
     private BigDecimal igv;
 
-    private Integer cantidad;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "usuario_id", nullable = false)

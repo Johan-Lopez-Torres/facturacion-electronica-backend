@@ -28,7 +28,7 @@ public class ComprobanteRequest {
     @Pattern(regexp = "^\\d{8}|\\d{11}$",  message = AppConstants.DOCUMENTO_INVALIDO)
     private String dniORuc;
 
-    List<Long> productoIds;
+    private List<ProductoCantidadRequest> productos;
 
 
 }

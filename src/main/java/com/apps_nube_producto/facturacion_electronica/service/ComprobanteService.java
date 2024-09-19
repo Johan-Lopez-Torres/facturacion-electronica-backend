@@ -38,14 +38,14 @@ public class ComprobanteService {
 
          Comprobante comprobanteFinal = comprobanteRepository.save(comprobante); // Guardar el comprobante para obtener el comprobante_id
 
-        List<ComprobanteProducto> comprobanteProductos = comprobanteRequest.getProductoIds().stream().map(id -> {
-            Producto producto = productoRepository.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+        List<ComprobanteProducto> comprobanteProductos = comprobanteRequest.getProductos().stream().map(id -> {
+            Producto producto = productoRepository
+                    .findById(id.getProductoId()).orElseThrow(() -> new RuntimeException("Producto no encontrado"));
 
             return ComprobanteProducto.builder()
                     .producto(producto)
                     .comprobante(comprobanteFinal)  // Asignar el comprobante ahora que tiene ID
-                    .cantidad(comprobanteRequest.getCantidad())
+                    .cantidad(id.getCantidad())
                     .build();
         }).collect(Collectors.toList());
 
@@ -55,6 +55,7 @@ public class ComprobanteService {
         BigDecimal subtotal = calcularSubtotal(comprobanteProductos);
         BigDecimal total = calcularTotal(subtotal);
 
+        comprobante.setSubtotal(subtotal);
         comprobante.setTotal(total);
 
         // Guardar el comprobante con los productos relacionados
